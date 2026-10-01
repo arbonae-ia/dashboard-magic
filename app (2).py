@@ -165,7 +165,13 @@ if archivo is not None:
         st.dataframe(df_tabla, use_container_width=True, height=250)
     else:
         st.warning("No se registran transacciones de venta.")
+   
+st.markdown("---")
+    
+    # 7. TABLA GENERAL DE AUDITORÍA (Opcional, para ver todo el Excel si se necesita)
+    st.subheader("📋 Historial Completo de la Correría (Auditable)")
+    st.dataframe(df_filtrado, use_container_width=True)
+else:
     st.markdown('</div>', unsafe_allow_html=True)
 
-else:
     st.info("👋 Por favor sube el archivo de Excel para generar el Dashboard Corporativo.")
