@@ -34,23 +34,49 @@ if archivo is not None:
     if segmento_sel != "Todos":
         df_filtrado = df_filtrado[df_filtrado['Segmento'] == segmento_sel]
 
-    # 4. CÁLCULO DE KPIs PRINCIPALES
+        # 4. CÁLCULO DE KPIs PRINCIPALES
     total_ventas = df_filtrado['Valor Pedido'].sum()
     total_visitas = df_filtrado['ID_Visita'].nunique()
     total_metros = df_filtrado['Metros Pedidos'].sum()
     
-    # Calcular Efectividad Comercial (Visitas con pedido > 0 / Total visitas)
     visitas_con_pedido = df_filtrado[df_filtrado['Valor Pedido'] > 0]['ID_Visita'].nunique()
     efectividad = (visitas_con_pedido / total_visitas * 100) if total_visitas > 0 else 0
     
-    # Renderizar los KPIs en 4 columnas
-    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-    kpi1.metric("Total Ventas Logradas", f"${total_ventas:,.2f}")
-    kpi2.metric("Total Visitas Ejecutadas", f"{total_visitas} Clientes")
-    kpi3.metric("Total Metros Pedidos", f"{total_metros:,.1f} m")
-    kpi4.metric("Efectividad Comercial", f"{efectividad:.2f}%")
+    # --- ARANDELAS VISUALES: Estilo personalizado para encuadrar y encoger la letra ---
+    st.markdown("""
+        <style>
+        /* Reducir el tamaño del número para que no se corte y forzar que quepa completo */
+        [data-testid="stMetricValue"] {
+            font-size: 24px !important;
+            word-break: break-all !important;
+            white-space: normal !important;
+        }
+        /* Reducir el tamaño del título de la tarjeta */
+        [data-testid="stMetricLabel"] {
+            font-size: 14px !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
     
-    st.markdown("---")
+    # Renderizar las métricas dentro de cuadros (contenedores con borde ligero)
+    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+    
+    with kpi1:
+        with st.container(border=True): # Crea el efecto de botón/cuadro de fondo
+            st.metric(label="💰 Total Ventas Logradas", value=f"${total_ventas:,.2f}")
+            
+    with kpi2:
+        with st.container(border=True):
+            st.metric(label="📍 Total Visitas Ejecutadas", value=f"{total_visitas} Clientes")
+            
+    with kpi3:
+        with st.container(border=True):
+            st.metric(label="📏 Total Metros Pedidos", value=f"{total_metros:,.1f} m")
+            
+    with kpi4:
+        with st.container(border=True):
+            st.metric(label="📈 Efectividad Comercial", value=f"{efectividad:.2f}%")
+
     
     # 5. BLOQUE DE GRÁFICOS 1 y 2 (Lado a Lado)
     col1, col2 = st.columns(2)
