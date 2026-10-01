@@ -42,40 +42,51 @@ if archivo is not None:
     visitas_con_pedido = df_filtrado[df_filtrado['Valor Pedido'] > 0]['ID_Visita'].nunique()
     efectividad = (visitas_con_pedido / total_visitas * 100) if total_visitas > 0 else 0
     
-    # --- ARANDELAS VISUALES: Estilo personalizado para encuadrar y encoger la letra ---
+    # --- ARANDELAS VISUALES: Estilo clásico, números en negrilla y fuentes compactas ---
     st.markdown("""
         <style>
-        /* Reducir el tamaño del número para que no se corte y forzar que quepa completo */
+        /* Poner el resultado de la métrica en Negrilla (Bold) y ajustar tamaño */
         [data-testid="stMetricValue"] {
+            font-weight: 800 !important;
             font-size: 24px !important;
             word-break: break-all !important;
             white-space: normal !important;
         }
-        /* Reducir el tamaño del título de la tarjeta */
+        /* Ajustar el nombre de la métrica (un poco más claro para dar contraste) */
         [data-testid="stMetricLabel"] {
-            font-size: 14px !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            opacity: 0.85;
         }
         </style>
     """, unsafe_allow_html=True)
     
-    # Renderizar las métricas dentro de cuadros (contenedores con borde ligero)
+    # Renderizar las métricas dentro de cuadros con iconos clásicos de Bootstrap
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
     
     with kpi1:
-        with st.container(border=True): # Crea el efecto de botón/cuadro de fondo
-            st.metric(label="💰 Total Ventas Logradas", value=f"${total_ventas:,.2f}")
+        with st.container(border=True):
+            # Icono: bdt-currency-dollar (icono clásico de moneda)
+            st.metric(label="Total Ventas Logradas", value=f"${total_ventas:,.2f}")
+            st.caption(":material/currency_dollar: Financiero")
             
     with kpi2:
         with st.container(border=True):
-            st.metric(label="📍 Total Visitas Ejecutadas", value=f"{total_visitas} Clientes")
+            # Icono: material/pin_drop (icono de ubicación de visita)
+            st.metric(label="Total Visitas Ejecutadas", value=f"{total_visitas} Clientes")
+            st.caption(":material/pin_drop: Cobertura")
             
     with kpi3:
         with st.container(border=True):
-            st.metric(label="📏 Total Metros Pedidos", value=f"{total_metros:,.1f} m")
+            # Icono: material/straighten (icono de regla/medida para metros)
+            st.metric(label="Total Metros Pedidos", value=f"{total_metros:,.1f} m")
+            st.caption(":material/straighten: Volumen")
             
     with kpi4:
         with st.container(border=True):
-            st.metric(label="📈 Efectividad Comercial", value=f"{efectividad:.2f}%")
+            # Icono: material/trending_up (icono clásico de efectividad)
+            st.metric(label="Efectividad Comercial", value=f"{efectividad:.2f}%")
+            st.caption(":material/trending_up: Rendimiento")
 
     
     # 5. BLOQUE DE GRÁFICOS 1 y 2 (Lado a Lado)
