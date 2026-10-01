@@ -3,9 +3,9 @@ import pandas as pd
 import plotly.express as px
 
 # 1. CONFIGURACIÓN DE LA PÁGINA
-st.set_page_config(page_title="Dashboard Comercial", layout="wide")
-st.title("📊 Control de Gestión - Visitas Comerciales")
-st.markdown("Herramienta automatizada para la evaluación de la gestión de ventas.")
+st.set_page_config(page_title="Dashboard Comercial Completo", layout="wide")
+st.title("📊 Control de Gestión y Auditoría Comercial")
+st.markdown("Tablero integral para la evaluación de la gestión de ventas y visitas.")
 
 # 2. CARGA DEL ARCHIVO EXCEL
 archivo = st.file_uploader("Sube el archivo Excel de la correría", type=["xlsx", "xls"])
@@ -39,17 +39,21 @@ if archivo is not None:
     total_visitas = df_filtrado['ID_Visita'].nunique()
     total_metros = df_filtrado['Metros Pedidos'].sum()
     
-    # Renderizar los KPIs en 3 columnas
-    kpi1, kpi2, kpi3 = st.columns(3)
+    # Calcular Efectividad Comercial (Visitas con pedido > 0 / Total visitas)
+    visitas_con_pedido = df_filtrado[df_filtrado['Valor Pedido'] > 0]['ID_Visita'].nunique()
+    efectividad = (visitas_con_pedido / total_visitas * 100) if total_visitas > 0 else 0
+    
+    # Renderizar los KPIs en 4 columnas
+    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
     kpi1.metric("💰 Total Ventas Logradas", f"${total_ventas:,.2f}")
     kpi2.metric("📍 Total Visitas Ejecutadas", f"{total_visitas} Clientes")
     kpi3.metric("📏 Total Metros Pedidos", f"{total_metros:,.1f} m")
+    kpi4.metric("📈 Efectividad Comercial", f"{efectividad:.2f}%")
     
     st.markdown("---")
     
-    # 5. RENDERIZADO DE LOS GRÁFICOS INTERACTIVOS
+    # 5. BLOQUE DE GRÁFICOS 1 y 2 (Lado a Lado)
     col1, col2 = st.columns(2)
-    
     with col1:
         st.subheader("🎯 Estado de la Etapa Comercial")
         df_etapas = df_filtrado['Etapa Comercial'].value_counts().reset_index()
@@ -67,11 +71,41 @@ if archivo is not None:
         
     st.markdown("---")
     
-    # Gráfico 3 de ancho completo al fondo
-    st.subheader("📦 Efectividad: ¿Dejar Muestrario genera más Pedidos?")
-    df_muestras = df_filtrado.groupby(['Muestrario', 'Genero Pedido']).size().reset_index(name='Cantidad')
-    fig_muestras = px.bar(df_muestras, x='Muestrario', y='Cantidad', color='Genero Pedido', barmode='group')
-    st.plotly_chart(fig_muestras, use_container_width=True)
+    # 6. BLOQUE DE GRÁFICOS 3 y 4 (Lado a Lado)
+    col3, col4 = st.columns(2)
+    with col3:
+        st.subheader("📦 Efectividad: Muestrario vs Generación de Pedido")
+        df_muestras = df_filtrado.groupby(['Muestrario', 'Genero Pedido']).size().reset_index(name='Cantidad')
+        fig_muestras = px.bar(df_muestras, x='Muestrario', y='Cantidad', color='Genero Pedido', barmode='group', text_auto=True)
+        st.plotly_chart(fig_muestras, use_container_width=True)
+        
+    with col4:
+        st.subheader("🗺️ Gestión de Visitas por Ciudad")
+        df_ciudad_g = df_filtrado['Ciudad'].value_counts().reset_index()
+        df_ciudad_g.columns = ['Ciudad', 'Visitas']
+        fig_ciudad = px.bar(df_ciudad_g, x='Ciudad', y='Visitas', color='Ciudad', text_auto=True)
+        st.plotly_chart(fig_ciudad, use_container_width=True)
+
+    st.markdown("---")
+
+    # 7. LA TABLA SOLICITADA: Detalle de Clientes que Efectuaron Compras
+    st.subheader("💵 Detalle de Clientes con Compras Efectivas")
+    
+    # Filtrar solo los registros donde hubo venta
+    clientes_compraron = df_filtrado[df_filtrado['Valor Pedido'] > 0]
+    
+    if not clientes_compraron.empty:
+        columnas_interes = ['Cliente', 'Ciudad', 'Segmento', 'No. Factura', 'Valor Pedido', 'Metros Pedidos', 'Observaciones']
+        # Mostramos la tabla formateada y bonita
+        st.dataframe(clientes_compraron[columnas_interes].sort_values(by='Valor Pedido', ascending=False), use_container_width=True)
+    else:
+        st.warning("No se registran ventas para los filtros seleccionados.")
+        
+    st.markdown("---")
+    
+    # 8. TABLA GENERAL DE AUDITORÍA (Opcional, para ver todo el Excel si se necesita)
+    st.subheader("📋 Historial Completo de la Correría (Auditable)")
+    st.dataframe(df_filtrado, use_container_width=True)
 
 else:
     st.info("👋 Por favor sube el archivo Excel en el campo de arriba para generar el dashboard automáticamente.")
