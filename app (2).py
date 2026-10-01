@@ -34,7 +34,7 @@ if archivo is not None:
     if segmento_sel != "Todos":
         df_filtrado = df_filtrado[df_filtrado['Segmento'] == segmento_sel]
 
-        # 4. CÁLCULO DE KPIs PRINCIPALES
+          # 4. CÁLCULO DE KPIs PRINCIPALES
     total_ventas = df_filtrado['Valor Pedido'].sum()
     total_visitas = df_filtrado['ID_Visita'].nunique()
     total_metros = df_filtrado['Metros Pedidos'].sum()
@@ -42,51 +42,59 @@ if archivo is not None:
     visitas_con_pedido = df_filtrado[df_filtrado['Valor Pedido'] > 0]['ID_Visita'].nunique()
     efectividad = (visitas_con_pedido / total_visitas * 100) if total_visitas > 0 else 0
     
-    # --- ARANDELAS VISUALES: Estilo clásico, números en negrilla y fuentes compactas ---
+    # --- ARANDELAS VISUALES: Enlazar iconos clásicos y forzar negrilla limpia ---
     st.markdown("""
+        <!-- Cargamos la librería de iconos clásicos FontAwesome desde internet -->
+        <link rel="stylesheet" href="https://cloudflare.com">
+        
         <style>
-        /* Poner el resultado de la métrica en Negrilla (Bold) y ajustar tamaño */
+        /* Forzar los números de las métricas en negrilla pura y tamaño perfecto */
         [data-testid="stMetricValue"] {
             font-weight: 800 !important;
             font-size: 24px !important;
-            word-break: break-all !important;
-            white-space: normal !important;
+            color: #111111 !important; /* Color negro/gris oscuro corporativo */
         }
-        /* Ajustar el nombre de la métrica (un poco más claro para dar contraste) */
+        /* Ajustar el nombre de la métrica */
         [data-testid="stMetricLabel"] {
-            font-size: 13px !important;
-            font-weight: 500 !important;
-            opacity: 0.85;
+            display: none !important; /* Ocultamos el label nativo para usar nuestro diseño HTML limpio */
+        }
+        /* Estilo para nuestros títulos personalizados con icono */
+        .titulo-kpi {
+            font-size: 14px;
+            font-weight: 500;
+            color: #555555;
+            margin-bottom: 5px;
+        }
+        .titulo-kpi i {
+            margin-right: 6px;
+            color: #222222; /* Iconos clásicos en negro */
         }
         </style>
     """, unsafe_allow_html=True)
     
-    # Renderizar las métricas dentro de cuadros con iconos clásicos de Bootstrap
+    # Renderizar las tarjetas ejecutivas en columnas sin desbordamiento
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
     
     with kpi1:
         with st.container(border=True):
-            # Icono: bdt-currency-dollar (icono clásico de moneda)
-            st.metric(label="Total Ventas Logradas", value=f"${total_ventas:,.2f}")
-            st.caption(":material/currency_dollar: Financiero")
+            st.markdown('<div class="titulo-kpi"><i class="fa-solid fa-dollar-sign"></i>Total Ventas Logradas</div>', unsafe_allow_html=True)
+            st.metric(label="", value=f"${total_ventas:,.2f}")
             
     with kpi2:
         with st.container(border=True):
-            # Icono: material/pin_drop (icono de ubicación de visita)
-            st.metric(label="Total Visitas Ejecutadas", value=f"{total_visitas} Clientes")
-            st.caption(":material/pin_drop: Cobertura")
+            st.markdown('<div class="titulo-kpi"><i class="fa-solid fa-users"></i>Total Visitas Ejecutadas</div>', unsafe_allow_html=True)
+            st.metric(label="", value=f"{total_visitas} Clientes")
             
     with kpi3:
         with st.container(border=True):
-            # Icono: material/straighten (icono de regla/medida para metros)
-            st.metric(label="Total Metros Pedidos", value=f"{total_metros:,.1f} m")
-            st.caption(":material/straighten: Volumen")
+            st.markdown('<div class="titulo-kpi"><i class="fa-solid fa-ruler"></i>Total Metros Pedidos</div>', unsafe_allow_html=True)
+            st.metric(label="", value=f"{total_metros:,.1f} m")
             
     with kpi4:
         with st.container(border=True):
-            # Icono: material/trending_up (icono clásico de efectividad)
-            st.metric(label="Efectividad Comercial", value=f"{efectividad:.2f}%")
-            st.caption(":material/trending_up: Rendimiento")
+            st.markdown('<div class="titulo-kpi"><i class="fa-solid fa-chart-line"></i>Efectividad Comercial</div>', unsafe_allow_html=True)
+            st.metric(label="", value=f"{efectividad:.2f}%")
+
 
     
     # 5. BLOQUE DE GRÁFICOS 1 y 2 (Lado a Lado)
