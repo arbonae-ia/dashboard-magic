@@ -39,7 +39,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 2. BARRA LATERAL CON FILTROS
-st.sidebar.markdown("### 🔍 Filtrosimport streamlit as st
+# Mostrar el logo corporativo guardado en el repositorio
+st.sidebar.image("logo.png", use_container_width=True)
+
 import pandas as pd
 import plotly.express as px
 
