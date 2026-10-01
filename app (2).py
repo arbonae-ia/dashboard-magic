@@ -40,7 +40,7 @@ st.markdown("""
 
 # 2. BARRA LATERAL CON FILTROS
 # Mostrar el logo corporativo guardado en el repositorio
-st.sidebar.image("logo.png", use_container_width=True)
+st.sidebar.image("logo.jpg", use_container_width=True)
 
 import pandas as pd
 import plotly.express as px
