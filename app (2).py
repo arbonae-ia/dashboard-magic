@@ -39,6 +39,47 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 2. BARRA LATERAL CON FILTROS
+st.sidebar.markdown("### 🔍 Filtrosimport streamlit as st
+import pandas as pd
+import plotly.express as px
+
+# 1. CONFIGURACIÓN DE LA PÁGINA
+st.set_page_config(page_title="Dashboard Ejecutivo Magic Print", layout="wide")
+
+st.markdown("""
+    <style>
+    /* Estilos para las tarjetas de métricas */
+    [data-testid="stMetricValue"] {
+        font-weight: 800 !important;
+        font-size: 26px !important;
+        color: #1a1c23 !important;
+    }
+    [data-testid="stMetricLabel"] {
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #555555 !important;
+    }
+    /* Contenedor gris suave para la tabla */
+    .contenedor-tabla {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        margin-bottom: 20px;
+    }
+    /* Títulos de sección */
+    .titulo-seccion {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1a1c23;
+        margin-bottom: 15px;
+        border-left: 4px solid #b71c1c;
+        padding-left: 8px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# 2. BARRA LATERAL CON FILTROS
 st.sidebar.markdown("### 🔍 Filtros Ejecutivos")
 archivo = st.sidebar.file_uploader("Cargar Base de Datos (Excel)", type=["xlsx", "xls"])
 
@@ -165,13 +206,8 @@ if archivo is not None:
         st.dataframe(df_tabla, use_container_width=True, height=250)
     else:
         st.warning("No se registran transacciones de venta.")
-   
-st.markdown("---")
-    
-    # 7. TABLA GENERAL DE AUDITORÍA (Opcional, para ver todo el Excel si se necesita)
-    st.subheader("📋 Historial Completo de la Correría (Auditable)")
-    st.dataframe(df_filtrado, use_container_width=True)
-else:
     st.markdown('</div>', unsafe_allow_html=True)
 
+else:
     st.info("👋 Por favor sube el archivo de Excel para generar el Dashboard Corporativo.")
+
