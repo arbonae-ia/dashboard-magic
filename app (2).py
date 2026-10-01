@@ -39,8 +39,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 2. BARRA LATERAL CON FILTROS
-# Mostrar el logo corporativo guardado en el repositorio
-st.sidebar.image("logo.jpg", use_container_width=True)
+# Bloque de seguridad para que la app no se caiga si no encuentra la imagen
+try:
+    st.sidebar.image("logo.jpg", use_container_width=True)
+except Exception:
+    st.sidebar.markdown("### 🏬 Magic Print")
 
 import pandas as pd
 import plotly.express as px
