@@ -121,10 +121,14 @@ st.markdown(f"""
     div[data-testid="stVerticalBlockBorderWrapper"] {{
         background-color: #ffffff !important;
         border: 1px solid {LINE_COLOR} !important;
-        border-radius: 10px !important;
-        padding: 16px 18px !important;
+        border-radius: 12px !important;
+        padding: 16px 18px 24px 18px !important;
         box-shadow: 0 1px 3px rgba(0,0,0,0.03) !important;
-        margin-bottom: 12px !important;
+        margin-bottom: 14px !important;
+        box-sizing: border-box !important;
+    }}
+    div[data-testid="stVerticalBlockBorderWrapper"] > div {{
+        padding-bottom: 8px !important;
     }}
 
     /* Tarjetas KPI (idénticas a index.html) */
@@ -660,12 +664,12 @@ with col_g4:
                 pct_val = (seg_val / n_visitas) * 100
                 safe_name = esc(seg_name)
                 seg_items.append(
-                    f'<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:7px; font-size:12.5px;">'
-                    f'<div style="width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; color:{TEXT_COLOR};" title="{safe_name}">{safe_name}</div>'
-                    f'<div style="flex:1; height:9px; background:#eef1f5; border-radius:6px; overflow:hidden;">'
+                    f'<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:4px; font-size:12px;">'
+                    f'<div style="width:125px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; color:{TEXT_COLOR};" title="{safe_name}">{safe_name}</div>'
+                    f'<div style="flex:1; height:7px; background:#eef1f5; border-radius:6px; overflow:hidden;">'
                     f'<div style="width:{width_pct}%; height:100%; background:{c_color}; border-radius:6px;"></div>'
                     f'</div>'
-                    f'<div style="min-width:75px; text-align:right; font-weight:700; color:{NAVY}; font-size:12px;">{seg_val} ({pct_val:.1f}%)</div>'
+                    f'<div style="min-width:70px; text-align:right; font-weight:700; color:{NAVY}; font-size:11.5px;">{seg_val} ({pct_val:.1f}%)</div>'
                     f'</div>'
                 )
             
@@ -675,19 +679,19 @@ with col_g4:
             sp_pct = (sp_count / n_visitas * 100) if n_visitas > 0 else 0
 
             pills_html = (
-                f'<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;">'
-                f'<div style="background:#e6f4ee; border:1px solid #9fd5bf; border-radius:10px; text-align:center; padding:9px 6px; color:{GREEN};">'
-                f'<div style="font-size:11px; font-weight:700; letter-spacing:0.04em;">CON PEDIDO</div>'
-                f'<div style="font-size:17px; font-weight:800; margin-top:2px;">{p_count} ({p_pct:.1f}%)</div>'
+                f'<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; margin-bottom:4px;">'
+                f'<div style="background:#e6f4ee; border:1px solid #9fd5bf; border-radius:8px; text-align:center; padding:6px 4px; color:{GREEN};">'
+                f'<div style="font-size:10.5px; font-weight:700; letter-spacing:0.04em;">CON PEDIDO</div>'
+                f'<div style="font-size:15px; font-weight:800; margin-top:1px;">{p_count} ({p_pct:.1f}%)</div>'
                 f'</div>'
-                f'<div style="background:#e6f8fd; border:1px solid #9fe0f3; border-radius:10px; text-align:center; padding:9px 6px; color:{NAVY};">'
-                f'<div style="font-size:11px; font-weight:700; letter-spacing:0.04em;">SIN PEDIDO</div>'
-                f'<div style="font-size:17px; font-weight:800; margin-top:2px;">{sp_count} ({sp_pct:.1f}%)</div>'
+                f'<div style="background:#e6f8fd; border:1px solid #9fe0f3; border-radius:8px; text-align:center; padding:6px 4px; color:{NAVY};">'
+                f'<div style="font-size:10.5px; font-weight:700; letter-spacing:0.04em;">SIN PEDIDO</div>'
+                f'<div style="font-size:15px; font-weight:800; margin-top:1px;">{sp_count} ({sp_pct:.1f}%)</div>'
                 f'</div>'
                 f'</div>'
             )
 
-            st.markdown("".join(seg_items) + pills_html, unsafe_allow_html=True)
+            st.markdown(f'<div style="padding-bottom:10px;">{"".join(seg_items)}{pills_html}</div>', unsafe_allow_html=True)
         else:
             st.info("Sin datos de segmentos.")
 
